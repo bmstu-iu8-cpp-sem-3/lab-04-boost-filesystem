@@ -22,23 +22,26 @@ void printFinFile(const path &p,
     map<string, pair <unsigned int, string>>& accounts) {
 
     string name = p.stem().string();
-    string balance = name.substr(0, 8);
-    string number = name.substr(8, 8);
-    string separator = name.substr(16, 1);
-    string date = name.substr(17, 8);
-    string type = p.extension().string();
 
-    if(balance == "balance_" && stoi(number) && separator == "_" && stoi(date)
-    && type == ".txt") {
+    if (name.length() == 25) {
+        string balance = name.substr(0, 8);
+        string number = name.substr(8, 8);
+        string separator = name.substr(16, 1);
+        string date = name.substr(17, 8);
+        string type = p.extension().string();
 
-        cout << p.parent_path().string() + " " + p.filename().string() + '\n';
+        if(balance == "balance_" && stoi(number) && separator == "_" && stoi(date)
+        && type == ".txt") {
 
-        if (accounts.find(number) == accounts.end())
-            accounts[number] = pair<int, string> (1, date);
-        else {
-            accounts[number].first++;
-            accounts[number].second =
-            getLatestDate(date, accounts[number].second);
+            cout << p.parent_path().string() + " " + p.filename().string() + '\n';
+
+            if (accounts.find(number) == accounts.end())
+                accounts[number] = pair<int, string> (1, date);
+            else {
+                accounts[number].first++;
+                accounts[number].second =
+                getLatestDate(date, accounts[number].second);
+            }
         }
     }
 }
@@ -48,19 +51,21 @@ void printAccountsInfo(const path &path_to_dir,
     for (const directory_entry& obj : recursive_directory_iterator(path_to_dir)) {
         if (is_regular_file(obj.path())) {
             string name = obj.path().stem().string();
-            string balance = name.substr(0, 8);
-            string number = name.substr(8, 8);
-            string separator = name.substr(16, 1);
-            string date = name.substr(17, 8);
-            string type = obj.path().extension().string();
+            if (name.length() == 25) {
+                string balance = name.substr(0, 8);
+                string number = name.substr(8, 8);
+                string separator = name.substr(16, 1);
+                string date = name.substr(17, 8);
+                string type = obj.path().extension().string();
 
-            if(balance == "balance_" && stoi(number) && separator == "_" &&
-              stoi(date) && type == ".txt" && date == accounts[number].second) {
+                if(balance == "balance_" && stoi(number) && separator == "_" &&
+                  stoi(date) && type == ".txt" && date == accounts[number].second) {
 
-                cout << "broker:" << obj.path().string().substr(0, obj.path()
-                .string().length() - obj.path().filename().string().length())
-                << " account:" + number + " files:" << accounts[number].first <<
-                " lastdate:" + date + '\n';
+                    cout << "broker:" << obj.path().string().substr(0, obj.path()
+                    .string().length() - obj.path().filename().string().length())
+                    << " account:" + number + " files:" << accounts[number].first <<
+                    " lastdate:" + date + '\n';
+                }
             }
         }
     }
