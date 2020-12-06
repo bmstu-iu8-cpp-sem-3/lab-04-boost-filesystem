@@ -105,3 +105,8 @@ for (const directory_entry& x : directory_iterator{p})
 | `is_symlink` | определяет, является ли узел по указанному пути `path` символьной ссылкой |
 | `read_symlink` | разрешает символическую ссылку, возаращаемый объект `path` хранит содержимое символической ссылки, либо пустое значение |
 | `filesystem_error` | тип исключений, возникающих при ошибках в `boost::filesystem` |
+
+При необходимости наличия тестовых данных в директории сборки, можно добавть в **CMakeLists.txt**
+```cmake
+file(COPY misc DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+```
